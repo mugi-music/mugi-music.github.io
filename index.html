@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mugi — Multi-task Song Generation</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a1a;
+    --muted: #666666;
+    --line: #e5e5e5;
+    --accent: #2b6cb0;
+    --card: #f7f8fa;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 72px 24px 96px;
+  }
+  header { text-align: center; margin-bottom: 40px; }
+  h1 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0 0 12px;
+  }
+  .subtitle {
+    font-size: 1.05rem;
+    color: var(--muted);
+    margin: 0 0 20px;
+  }
+  .venue {
+    display: inline-block;
+    font-size: 0.9rem;
+    color: var(--muted);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 4px 14px;
+  }
+  .links {
+    margin-top: 24px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .links a {
+    text-decoration: none;
+    font-size: 0.92rem;
+    color: var(--fg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 8px 16px;
+    transition: all 0.15s ease;
+  }
+  .links a:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: #f0f6fc;
+  }
+  h2 {
+    font-size: 1.25rem;
+    font-weight: 650;
+    margin: 48px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+  }
+  .abstract {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 24px 28px;
+    font-size: 1rem;
+    text-align: justify;
+  }
+  .abstract p { margin: 0; }
+  .tasks {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+  }
+  .task {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 18px 20px;
+  }
+  .task h3 {
+    margin: 0 0 6px;
+    font-size: 1rem;
+    font-weight: 650;
+  }
+  .task p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+  .contrib { padding-left: 22px; margin: 0; }
+  .contrib li { margin-bottom: 10px; }
+  .note {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-top: 8px;
+  }
+  footer {
+    margin-top: 64px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+  @media (max-width: 600px) {
+    .wrap { padding: 48px 18px 64px; }
+    h1 { font-size: 1.85rem; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>Mugi</h1>
+    <div class="subtitle">Multi-task Song Generation with Joint Autoregressive-Diffusion Training<br>and Cover-Oriented Tokenization</div>
+    <div class="venue">Anonymous Submission &middot; Demo Page</div>
+    <div class="links">
+      <a href="https://mugi-music.github.io/">Audio Samples</a>
+      <a href="#">Paper (PDF)</a>
+      <a href="#">Code</a>
+    </div>
+  </header>
+
+  <h2>Abstract</h2>
+  <div class="abstract">
+    <p>
+      Song generation has advanced rapidly in recent years, but most existing studies still focus on
+      text-conditioned generation, with limited support for tasks such as cover song generation.
+      Meanwhile, recent systems increasingly adopt a two-stage paradigm in which an autoregressive (AR)
+      language model predicts high-level representations and a diffusion model renders acoustic details.
+      However, these two modules are typically trained separately and connected only through discrete
+      tokens. In this paper, we present <b>Mugi</b>, a unified song generation model that supports
+      text-to-song, cover song, and timbre-controllable song generation within a single framework. To
+      support high-fidelity cover song generation, we introduce a <b>Cover-Tokenizer</b> that represents
+      melodic information and linguistic content as two parallel token streams, enabling the generated
+      song to faithfully preserve melodic, harmonic, and rhythmic characteristics while maintaining the
+      phoneme-level temporal alignment of the lyrics. Furthermore, Mugi <b>jointly trains the AR and
+      diffusion stages</b> by directly conditioning the diffusion model on the continuous hidden states
+      of the AR model, optimizing the two stages together in a single end-to-end training process using
+      both the AR language-modeling loss and the flow-matching objective. Extensive subjective and
+      objective evaluations demonstrate strong performance across multiple song generation tasks, with
+      objective results competitive with commercial systems.
+    </p>
+  </div>
+  <div class="note">Audio samples are available at the anonymous link: https://mugi-music.github.io/</div>
+
+  <h2>Supported Tasks</h2>
+  <div class="tasks">
+    <div class="task">
+      <h3>Text-to-Song</h3>
+      <p>Generate a complete song with vocals and accompaniment directly from a text description.</p>
+    </div>
+    <div class="task">
+      <h3>Cover Song Generation</h3>
+      <p>Reproduce a reference track while preserving its melody, harmony and rhythm.</p>
+    </div>
+    <div class="task">
+      <h3>Timbre Control</h3>
+      <p>Render the same musical content with a target singer timbre.</p>
+    </div>
+  </div>
+
+  <h2>Key Contributions</h2>
+  <ul class="contrib">
+    <li>A <b>unified framework</b> that handles text-to-song, cover song and timbre-controllable generation in a single model.</li>
+    <li>A <b>Cover-Tokenizer</b> that disentangles melody and linguistic content into two parallel token streams for phoneme-level alignment.</li>
+    <li><b>Joint AR–diffusion training</b>: the diffusion stage is conditioned on continuous AR hidden states and optimized end-to-end with the flow-matching objective.</li>
+  </ul>
+
+  <footer>
+    Demo page draft for <b>Mugi</b>. Audio samples:
+    <a href="https://mugi-music.github.io/">mugi-music.github.io</a>
+  </footer>
+
+</div>
+</body>
+</html>
