@@ -11,6 +11,7 @@
     --muted: #666666;
     --line: #e5e5e5;
     --accent: #2b6cb0;
+    --accent-dark: #1a4971;
     --card: #f7f8fa;
   }
   * { box-sizing: border-box; }
@@ -24,11 +25,57 @@
     -webkit-font-smoothing: antialiased;
   }
   .wrap {
-    max-width: 800px;
+    max-width: 860px;
     margin: 0 auto;
     padding: 72px 24px 96px;
   }
-  header { text-align: center; margin-bottom: 40px; }
+  header { text-align: center; margin-bottom: 24px; }
+  .mascot-wrap {
+    position: relative;
+    width: fit-content;
+    margin: 0 auto;
+  }
+  .mascot {
+    width: 480px;
+    max-width: 100%;
+    height: auto;
+    image-rendering: pixelated;
+    margin: 0;
+    display: block;
+    cursor: pointer;
+  }
+  .bubble {
+    position: absolute;
+    left: calc(100% - 60px);
+    top: 50%;
+    width: 250px;
+    background: #fff8e1;
+    border-radius: 14px;
+    padding: 10px 14px;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: var(--muted);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transform: translateY(-50%) scale(0.85);
+    transform-origin: left center;
+    transition: opacity 0.18s ease, transform 0.18s ease;
+    pointer-events: none;
+  }
+  .bubble::before {
+    content: "";
+    position: absolute;
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 8px solid transparent;
+    border-right-color: #fff8e1;
+  }
+  .bubble.show {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+  .mascot-wrap + h2 { margin-top: 24px; }
   h1 {
     font-size: 2.4rem;
     font-weight: 700;
@@ -69,12 +116,44 @@
     color: var(--accent);
     background: #f0f6fc;
   }
+  .link-wrap { position: relative; display: flex; }
+  .tooltip {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1a1a1a;
+    color: #fff;
+    font-size: 0.8rem;
+    line-height: 1.45;
+    padding: 8px 12px;
+    border-radius: 8px;
+    width: max-content;
+    max-width: 240px;
+    text-align: center;
+    z-index: 10;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  }
+  .tooltip::before {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-bottom-color: #1a1a1a;
+  }
   h2 {
     font-size: 1.25rem;
     font-weight: 650;
     margin: 48px 0 16px;
     padding-bottom: 8px;
     border-bottom: 1px solid var(--line);
+  }
+  h3 {
+    font-size: 1.08rem;
+    font-weight: 650;
+    margin: 36px 0 8px;
   }
   .abstract {
     background: var(--card);
@@ -85,33 +164,185 @@
     text-align: justify;
   }
   .abstract p { margin: 0; }
-  .tasks {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 16px;
-  }
-  .task {
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 18px 20px;
-  }
-  .task h3 {
-    margin: 0 0 6px;
-    font-size: 1rem;
-    font-weight: 650;
-  }
-  .task p {
-    margin: 0;
+  .demo-note {
     font-size: 0.9rem;
     color: var(--muted);
+    margin: 0 0 4px;
+  }
+  .task-section { margin-top: 20px; }
+  .task-desc {
+    font-size: 0.93rem;
+    color: var(--muted);
+    margin: 0 0 16px;
+  }
+  .case {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 14px;
+    background: var(--bg);
+  }
+  .case-head {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .case-idx {
+    font-size: 0.85rem;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    padding-top: 3px;
+    min-width: 22px;
+  }
+  .case-info { flex: 1; min-width: 0; }
+  .case-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .case-name {
+    font-family: Georgia, "Times New Roman", "Songti SC", SimSun, serif;
+    font-weight: 600;
+    font-size: 1.08rem;
+    letter-spacing: 0.01em;
+  }
+  .badge {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    border-radius: 4px;
+    padding: 1px 6px;
+    flex: none;
+  }
+  .badge-zh { background: #fbeaea; color: #a83a3a; }
+  .badge-en { background: #e7f0fa; color: #2b6cb0; }
+  .case-caption {
+    font-size: 0.86rem;
+    color: var(--muted);
+    margin-top: 3px;
+  }
+  .case-details {
+    margin-top: 6px;
+    font-size: 0.84rem;
+  }
+  .case-details summary {
+    cursor: pointer;
+    color: var(--accent);
+    user-select: none;
+    display: flex;
+    justify-content: flex-end;
+    white-space: nowrap;
+  }
+  .detail-text {
+    font-size: 0.84rem;
+    color: var(--muted);
+    margin: 8px 0;
+  }
+  .lyrics {
+    white-space: pre-wrap;
+    font-family: inherit;
+    font-size: 0.82rem;
+    line-height: 1.55;
+    color: var(--fg);
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 12px 14px;
+    max-height: 320px;
+    overflow: auto;
+    margin: 8px 0 0;
+  }
+  .chips {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .chip {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 9px 11px;
+    background: var(--card);
+    min-width: 0;
+  }
+  .chip.playing { border-color: var(--accent); }
+  .chip-ours {
+    border-color: var(--accent);
+    background: #f0f6fc;
+  }
+  .chip-ref { border-style: dashed; }
+  .chip-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+  .chip-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: none;
+    background: var(--accent);
+    color: #fff;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    padding: 0;
+  }
+  .chip-btn:hover { background: var(--accent-dark); }
+  .chip-btn .ic { display: none; line-height: 0; }
+  .chip-btn .ic-play { display: inline-flex; }
+  .chip-btn.playing .ic-play, .chip-btn.loading .ic-play { display: none; }
+  .chip-btn.playing .ic-pause { display: inline-flex; }
+  .chip-btn.loading .ic-load { display: inline-flex; }
+  .chip-btn.playing { background: var(--accent-dark); }
+  .ic-load {
+    width: 11px;
+    height: 11px;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .chip-label {
+    flex: 1;
+    min-width: 0;
+    font-size: 0.86rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .chip-time {
+    font-size: 0.7rem;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    visibility: hidden;
+  }
+  .chip-bar {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--line);
+    cursor: pointer;
+    visibility: hidden;
+  }
+  .chip.armed .chip-time,
+  .chip.armed .chip-bar { visibility: visible; }
+  .chip-bar-fill {
+    height: 100%;
+    width: 0;
+    border-radius: 2px;
+    background: var(--accent);
   }
   .contrib { padding-left: 22px; margin: 0; }
   .contrib li { margin-bottom: 10px; }
-  .note {
-    font-size: 0.9rem;
-    color: var(--muted);
-    margin-top: 8px;
-  }
   footer {
     margin-top: 64px;
     padding-top: 20px;
@@ -124,6 +355,25 @@
   @media (max-width: 600px) {
     .wrap { padding: 48px 18px 64px; }
     h1 { font-size: 1.85rem; }
+    .case { padding: 14px 14px; }
+    .chips { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+    .bubble {
+      left: 50%;
+      top: calc(100% + 12px);
+      width: min(320px, 92vw);
+      transform: translateX(-50%) scale(0.85);
+      transform-origin: center top;
+    }
+    .bubble.show { transform: translateX(-50%) scale(1); }
+    .bubble::before {
+      right: auto;
+      left: 50%;
+      top: auto;
+      bottom: 100%;
+      transform: translateX(-50%);
+      border-right-color: transparent;
+      border-bottom-color: #fff8e1;
+    }
   }
 </style>
 </head>
@@ -135,11 +385,18 @@
     <div class="subtitle">Multi-task Song Generation with Joint Autoregressive-Diffusion Training<br>and Cover-Oriented Tokenization</div>
     <div class="venue">Anonymous Submission &middot; Demo Page</div>
     <div class="links">
-      <a href="https://mugi-music.github.io/">Audio Samples</a>
-      <a href="#">Paper (PDF)</a>
-      <a href="#">Code</a>
+      <a href="#demo">Audio Samples</a>
+      <span class="link-wrap">
+        <a href="#" id="code-link" aria-describedby="code-tip">Code</a>
+        <span class="tooltip" id="code-tip" role="tooltip" hidden>We will open source our code and model upon publication.</span>
+      </span>
     </div>
   </header>
+
+  <div class="mascot-wrap">
+    <img class="mascot" id="mascot" src="image/mugi.gif" alt="Mugi mascot: pixel-art character playing a keyboard">
+    <div class="bubble" id="mascot-note" role="status">Mugi is named after Tsumugi Kotobuki from K-On!; she's the pianist of the Ho-kago Tea Time (HTT).</div>
+  </div>
 
   <h2>Abstract</h2>
   <div class="abstract">
@@ -162,23 +419,10 @@
       objective results competitive with commercial systems.
     </p>
   </div>
-  <div class="note">Audio samples are available at the anonymous link: https://mugi-music.github.io/</div>
 
-  <h2>Supported Tasks</h2>
-  <div class="tasks">
-    <div class="task">
-      <h3>Text-to-Song</h3>
-      <p>Generate a complete song with vocals and accompaniment directly from a text description.</p>
-    </div>
-    <div class="task">
-      <h3>Cover Song Generation</h3>
-      <p>Reproduce a reference track while preserving its melody, harmony and rhythm.</p>
-    </div>
-    <div class="task">
-      <h3>Timbre Control</h3>
-      <p>Render the same musical content with a target singer timbre.</p>
-    </div>
-  </div>
+  <h2 id="demo">Audio Samples</h2>
+  <p class="demo-note">Each example compares Mugi against baseline systems. Audio is streamed on demand — nothing is loaded until you press play. Click <b>Lyrics</b> / <b>Details</b> to inspect the generation inputs.</p>
+  <div id="demo"></div>
 
   <h2>Key Contributions</h2>
   <ul class="contrib">
@@ -188,10 +432,11 @@
   </ul>
 
   <footer>
-    Demo page draft for <b>Mugi</b>. Audio samples:
-    <a href="https://mugi-music.github.io/">mugi-music.github.io</a>
+    Demo page for <b>Mugi</b>.
   </footer>
 
 </div>
+<script src="demo-data.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
